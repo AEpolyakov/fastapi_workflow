@@ -27,7 +27,7 @@ jobs:
 
     - name: Run tests
       run: |
-        docker compose exec -T app pytest tests/ -v
+        docker compose exec -T fw pytest tests/ -v
         # docker compose run --rm test
 
     - name: Check logs if tests failed
