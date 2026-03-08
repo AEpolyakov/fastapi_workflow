@@ -3,6 +3,8 @@ name: workflow
 on:
   push:
     branches: [ "master", "develop", "feature" ]
+  pull_request:
+    branches: [ "master", "develop", "feature" ]
 
 jobs:
 
