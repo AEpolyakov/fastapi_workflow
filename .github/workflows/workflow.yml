@@ -18,25 +18,25 @@ jobs:
 
     - name: Build and run with docker-compose
       run: |
-        docker-compose -f docker-compose.yml up -d --build
+        docker compose -f docker-compose.yml up -d --build
 
     - name: Wait for services to be ready
       run: |
         sleep 10
-        docker-compose ps
+        docker compose ps
 
     - name: Run tests
       run: |
-        docker-compose exec -T app pytest tests/ -v
-        # docker-compose run --rm test
+        docker compose exec -T app pytest tests/ -v
+        # docker compose run --rm test
 
     - name: Check logs if tests failed
       if: failure()
       run: |
-        docker-compose logs
-        docker-compose ps
+        docker compose logs
+        docker compose ps
 
     - name: Cleanup
       if: always()
       run: |
-        docker-compose down -v
+        docker compose down -v
