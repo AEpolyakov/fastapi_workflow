@@ -1,9 +1,10 @@
 services:
-  web:
+  fw:
     env_file:
       - .env
     build: .
-    command: >
-      sh -c "uv run uvicorn app.main:app --host 0.0.0.0 --port ${APP_PORT} --log-level ${LOG_LEVEL}"
+    command: uvicorn app.main:app --host 0.0.0.0 --port ${APP_PORT} --log-level ${LOG_LEVEL}
     ports:
       - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - PYTHONUNBUFFERED=1
