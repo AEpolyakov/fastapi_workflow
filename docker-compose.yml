@@ -1,4 +1,22 @@
 services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "${CLICKHOUSE_PORT}:${CLICKHOUSE_PORT}"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
+      CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
+      CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+    healthcheck:
+      test: [ "CMD", "clickhouse-client", "--query", "SELECT 1" ]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
   fw:
     env_file:
       - .env
@@ -7,4 +25,16 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     environment:
-      - PYTHONUNBUFFERED=1
+      PYTHONUNBUFFERED: 1
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: "${CLICKHOUSE_PORT}"
+      CLICKHOUSE_USER: "${CLICKHOUSE_USER}"
+      CLICKHOUSE_PASSWORD: "${CLICKHOUSE_PASSWORD}"
+      CLICKHOUSE_DB: "${CLICKHOUSE_DB}"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+volumes:
+  clickhouse_data:
+
